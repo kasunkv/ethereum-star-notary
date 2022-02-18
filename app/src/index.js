@@ -64,7 +64,7 @@ const App = {
 		App.setStatus("New Star Owner is " + this.account + ".");
   },
 
-	findStar: async function() {
+	lookUp: async function() {
 		const { lookUpTokenIdToStarInfo } = this.meta.methods;
 
 		const starIdToFindElement = document.getElementById("starIdToFind");
