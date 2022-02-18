@@ -4,7 +4,7 @@
 - Truffle v5.5.0
 - Openzeppelin Contracts v4.5.0
 - Solidity v0.8.10
-- Node v16.13.1 & v17.2.0
+- Node v16.13.1 or v17.2.0
 
 
 ## How to Run the Application
