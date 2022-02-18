@@ -1,37 +1,97 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>MetaCoin | Truffle Webpack Demo w/ Frontend</title>
+    <title>Star Notary | Blockchain Developer Nanodegree</title>
   </head>
-  <style>
-    input {
-      display: block;
-      margin-bottom: 12px;
-    }
-  </style>
+	<link href="https://bootswatch.com/5/lux/bootstrap.min.css" rel="stylesheet"></link>
+	<style>
+		.pad-small {
+			padding-top: 20px;
+		}
+
+		.pad-medium {
+			padding-top: 30px
+		}
+
+		.hide {
+			display: none;
+		}
+
+		.show {
+			display: block;
+		}
+	</style>
   <body>
-    <h1>MetaCoin — Example Truffle Dapp</h1>
-    <p>You have <strong class="balance">loading...</strong> META</p>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#">Star Notary</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarColor02"></div>
+			</div>
+		</nav>
 
-    <h1>Send MetaCoin</h1>
+		<div class="container">
+			<div class="row pad-medium">
+				<h1>Star Notary Token</h1><hr><br>
+			</div>
 
-    <label for="amount">Amount:</label>
-    <input type="text" id="amount" placeholder="e.g. 95" />
+			<div class="row">
+				<div class="col-md-7">
+					<h3 class="pad-small">Create a Star</h3><hr>
 
-    <label for="receiver">To address:</label>
-    <input
-      type="text"
-      id="receiver"
-      placeholder="e.g. 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"
-    />
+					<div class="form-group">
+						<label for="starName" class="form-label mt-4">Star Name</label>
+						<input type="text" class="form-control" id="starName" placeholder="Enter name">
+					</div>
 
-    <button onclick="App.sendCoin()">Send MetaCoin</button>
+					<div class="form-group">
+						<label for="starId" class="form-label mt-4">Star ID</label>
+						<input type="text" class="form-control" id="starId" placeholder="Enter id">
+					</div>
 
-    <p id="status"></p>
-    <p>
-      <strong>Hint:</strong> open the browser developer console to view any
-      errors and warnings.
-    </p>
+					<div class="form-group pad-small">
+						<button class="btn btn-success" id="createStar" onclick="App.createStar()">Create Star</button>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<h4 class="pad-small">Wallet Detils</h4><hr>
+					<div style="padding-left: 20px">
+						<p class="lead">
+							Address: <span id="walletAddress"></span>
+						</p>
+						<p class="lead">
+							Balance: <span id="walletBalance"></span>
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="row pad-medium">
+				<div class="col-md-7">
+					<h3 class="pad-small">Find a Star</h3><hr>
+
+					<div class="form-group">
+						<label for="starIdToFind" class="form-label mt-4">Star ID</label>
+						<input type="text" class="form-control" id="starIdToFind" placeholder="Enter id">
+					</div>
+
+					<div class="form-group pad-small">
+						<button class="btn btn-success" id="findStar" onclick="App.findStar()">Find Star</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="row pad-medium">
+				<div class="col-md-12">
+					<div id="status" class="alert alert-dismissible alert-info hide">
+					</div>
+				</div>
+			</div>
+		</div>
+
+
     <script src="index.js"></script>
   </body>
 </html>

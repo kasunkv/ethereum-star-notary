@@ -1,5 +1,5 @@
 import Web3 from "web3";
-import metaCoinArtifact from "../../build/contracts/MetaCoin.json";
+import StarNotary from "../../build/contracts/StarNotary.json";
 
 const App = {
   web3: null,
@@ -12,9 +12,9 @@ const App = {
     try {
       // get contract instance
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = metaCoinArtifact.networks[networkId];
+      const deployedNetwork = StarNotary.networks[networkId];
       this.meta = new web3.eth.Contract(
-        metaCoinArtifact.abi,
+        StarNotary.abi,
         deployedNetwork.address,
       );
 
@@ -29,30 +29,59 @@ const App = {
   },
 
   refreshBalance: async function() {
-    const { getBalance } = this.meta.methods;
-    const balance = await getBalance(this.account).call();
+    const { balanceOf } = this.meta.methods;
+    const balance = await balanceOf(this.account).call();
 
-    const balanceElement = document.getElementsByClassName("balance")[0];
-    balanceElement.innerHTML = balance;
-  },
+		const addressElement = document.getElementById("walletAddress");
+		addressElement.innerHTML = this.account;
 
-  sendCoin: async function() {
-    const amount = parseInt(document.getElementById("amount").value);
-    const receiver = document.getElementById("receiver").value;
-
-    this.setStatus("Initiating transaction... (please wait)");
-
-    const { sendCoin } = this.meta.methods;
-    await sendCoin(receiver, amount).send({ from: this.account });
-
-    this.setStatus("Transaction complete!");
-    this.refreshBalance();
+    const balanceElement = document.getElementById("walletBalance");
+    balanceElement.innerHTML = `${balance} star(s)`;
   },
 
   setStatus: function(message) {
     const status = document.getElementById("status");
     status.innerHTML = message;
+		if (status.classList.contains('hide')) {
+			status.classList.remove('hide');
+		}
   },
+
+  createStar: async function() {
+    const { createStar } = this.meta.methods;
+
+		const starNameElement = document.getElementById("starName");
+		const starIdElement = document.getElementById("starId");
+
+    const name = starNameElement.value;
+    const id = starIdElement.value;
+
+    await createStar(name, id).send({from: this.account});
+
+		starNameElement.value = '';
+		starIdElement.value = '';
+
+		App.setStatus("New Star Owner is " + this.account + ".");
+  },
+
+	findStar: async function() {
+		const { lookUpTokenIdToStarInfo } = this.meta.methods;
+
+		const starIdToFindElement = document.getElementById("starIdToFind");
+		const id = starIdToFindElement.value;
+
+		const starName = await lookUpTokenIdToStarInfo(id).call();
+
+		starIdToFindElement.value = '';
+
+		if (starName) {
+			App.setStatus(`Star Found :) The Star name is ${starName}`);
+		} else {
+			App.setStatus(`Star not found. :(`);
+		}
+
+
+	}
 };
 
 window.App = App;
