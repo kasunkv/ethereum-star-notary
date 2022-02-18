@@ -86,4 +86,60 @@ contract('StarNotary', async (accounts) => {
 
 	});
 
+	it('can add the star name and star symbol properly', async() => {
+    const tokenName = await sut.name();
+		const tokenSymbol = await sut.symbol();
+
+		assert.equal(tokenName, 'Star Notary');
+		assert.equal(tokenSymbol, 'SN');
+	});
+
+	it('lets 2 users exchange stars', async() => {
+		// 1. create 2 Stars with different tokenId
+		const starId1 = 6;
+		await sut.createStar('Super Nova', starId1, {from: firstUserAccount});
+
+		const starId2 = 7
+		await sut.createStar('Super Super Nova', starId2, {from: secondUserAccount});
+
+		// 2. Call the exchangeStars functions implemented in the Smart Contract
+		// first user wants to exchange the stars with second user
+		await sut.exchangeStars(starId1, starId2, {from: firstUserAccount});
+
+		// 3. Verify that the owners changed
+		const starId1Owner = await sut.ownerOf.call(starId1);
+		const starId2Owner = await sut.ownerOf.call(starId2);
+
+		assert.equal(starId1Owner, secondUserAccount);
+		assert.equal(starId2Owner, firstUserAccount);
+	});
+
+	it('lets a user transfer a star', async() => {
+		// 1. create a Star with different tokenId
+		const starId = 8;
+		await sut.createStar('Super Duper Nova', starId, {from: firstUserAccount});
+
+		const originalOwner = await sut.ownerOf.call(starId);
+
+		// 2. use the transferStar function implemented in the Smart Contract
+		await sut.transferStar(secondUserAccount, starId, {from: firstUserAccount});
+		const newOwner = await sut.ownerOf.call(starId);
+
+		// 3. Verify the star owner changed.
+		assert.notEqual(originalOwner, newOwner);
+		assert.equal(newOwner, secondUserAccount);
+	});
+
+	it('lookUptokenIdToStarInfo test', async() => {
+		// 1. create a Star with different tokenId
+		const starId = 9;
+		await sut.createStar('I ran out of names', starId, {from: firstUserAccount});
+
+		// 2. Call your method lookUptokenIdToStarInfo
+		const starName = await sut.lookUpTokenIdToStarInfo.call(starId);
+
+		// 3. Verify if you Star name is the same
+		assert.equal(starName, 'I ran out of names');
+	});
+
 });
